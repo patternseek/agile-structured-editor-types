@@ -1,26 +1,26 @@
 <link rel="import" href="../polymer/polymer-micro.html">
 
 <style>
-    pnsk-structured-editor-agile-image .preview {
+    agile-structured-image .preview {
         background-color: white;
         margin-bottom: 12px;
         padding: 8px;
         display: none;
     }
 
-    pnsk-structured-editor-agile-image iframe {
+    agile-structured-image iframe {
         width: 100%;
         height: 600px;
         display: none;
         border: none;
     }
 
-    pnsk-structured-editor-agile-image .preview img {
+    agile-structured-image .preview img {
         max-width: 100%;
     }
 </style>
 
-<template id="pnsk-structured-editor-agile-image" noshadowroot>
+<template id="agile-structured-image" noshadowroot>
     <div class="preview"></div>
     <button class="toggleselector">Image selector</button>
     <iframe class="selectorwrapper"></iframe>
@@ -52,7 +52,7 @@
         _title: null,
         _format: null,
 
-        template: currentImport.querySelector('#pnsk-structured-editor-agile-image'),
+        template: currentImport.querySelector('#agile-structured-image'),
 
         dataType: "agile-image",
 
