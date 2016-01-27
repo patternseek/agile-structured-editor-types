@@ -1,0 +1,21 @@
+{
+  "name": "agile-structured-editor-types",
+  "license": "MIT",
+  "authors": [
+    "Tolan Blundell <tolan@patternseek.net>"
+  ],
+  "description": "Type components specific to Agile CMS for use with pnsk-structured-editor",
+  "keywords": [
+    "web-component"
+  ],
+  "main": "agile-structured-editor-types.html",
+  "homepage": "https://github.com/patternseek/agile-structured-editor-types/",
+  "ignore": [
+    "/.*",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "~1.2.3",
+    "pnsk-structured-editor": "~0.0.5"
+  }
+}
