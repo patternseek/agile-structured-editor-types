@@ -46,11 +46,12 @@
             selectorUrl: String,
             assetDisplayUrl: String,
             formats: Object,
+            _assetID: Number,
+            _title: String,
+            _format: Object,
         },
 
-        _assetID: null,
-        _title: null,
-        _format: null,
+
 
         template: currentImport.querySelector('#agile-structured-image'),
 
@@ -78,6 +79,9 @@
         },
 
         _updatePreview: function () {
+            if( typeof this._assetID == "undefined" ){
+                return;
+            }
             var img;
             var plc = this.qs(".preview");
             var src = this.assetDisplayUrl + this._assetID;
@@ -116,8 +120,11 @@
 
             wrap.style.display = "block";
 
-            event.preventDefault();
-            event.stopPropagation();
+            if( typeof event != "undefined" ){
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
         },
 
         _closeSelector: function () {
@@ -152,6 +159,8 @@
                     this.qs(".format").add(op);
                 }
                 this.qs(".format").value = this._format;
+            }else{
+                this.qs(".inputswrapper").style.display = "none";
             }
         }
 
