@@ -1,0 +1,107 @@
+<link rel="import" href="../polymer/polymer-micro.html">
+<link rel="import" href="./agile-structured-image.html">
+
+<style>
+    agile-structured-videoset .preview {
+        background-color: white;
+        margin-bottom: 12px;
+        padding: 8px;
+        display: none;
+    }
+
+    agile-structured-videoset iframe {
+        width: 100%;
+        height: 600px;
+        display: none;
+        border: none;
+    }
+
+    agile-structured-videoset .preview img {
+        max-width: 100%;
+    }
+
+    agile-structured-videoset agile-structured-image{
+        display: block;
+    }
+    
+</style>
+
+<template id="agile-structured-videoset" noshadowroot>
+    <label>
+        Poster image
+        <agile-structured-image class="poster"></agile-structured-image>
+    </label>
+    <label>
+        Video set
+        <agile-zencoder-create-and-select class="videoset">
+            <input type="hidden" class="valueHolder">
+        </agile-zencoder-create-and-select>
+    </label>
+    
+    <content></content>
+</template>
+
+
+<script>
+    Polymer({
+        is: 'agile-structured-videoset',
+        behaviors: [MinimalComponent],
+
+        properties: {
+            videoSetListSrc: String,
+            videoCreateName: String,
+            videoCreateUrl: String,
+            videoCreateParams: Object,
+            posterSelectorUrl: String,
+            posterDisplayUrl: String,
+            _posterIDTmp: Number
+        },
+
+        template: currentImport.querySelector('#agile-structured-videoset'),
+
+        dataType: "agile-videoset",
+
+        getState: function () {
+            return {
+                'videosetID': this.qs(".videoset").value,
+                'posterID': this.qs(".poster").getState().assetID
+            };
+        },
+
+        setState: function (state) {
+            this.qs(".videoset").value = state.videosetID;
+            this.qs(".poster").setState( {'assetID':state.posterID, 'format':''} );
+            // Work around poster not being ready on initial setup (still not sure why) by temp storing its ID, used in attached() below.
+            this._posterIDTmp = state.posterID;
+        },
+
+        _onChange: function () {
+            var event = new Event('pnsk-component-stateChanged');
+            this.dispatchEvent(event);
+        },
+
+        // Element Lifecycle
+        created: function () {
+
+        },
+
+        attached: function () {
+            var vid = this.qs(".videoset");
+            vid.videoSetListSrc = this.videoSetListSrc;
+            vid.createName = this.videoCreateName;
+            vid.createUrl = this.videoCreateUrl;
+            vid.createParams = this.videoCreateParams;
+            vid.addEventListener("change", this._onChange.bind(this));
+
+            var poster = this.qs(".poster");
+            poster.selectorUrl = this.posterSelectorUrl;
+            poster.assetDisplayUrl = this.posterDisplayUrl;
+            poster.addEventListener("pnsk-component-stateChanged", this._onChange.bind(this));
+
+            // Work around poster not being ready on initial setup (still not sure why). See setState()
+            this.qs(".poster").setState( {'assetID':this._posterIDTmp, 'format':''} );
+        }
+
+    });
+
+</script>
