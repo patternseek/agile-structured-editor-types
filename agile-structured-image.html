@@ -26,6 +26,10 @@
     <iframe class="selectorwrapper"></iframe>
         <span class="inputswrapper">
             <label>
+                Caption (Optional)
+                <input class="caption">
+            </label>
+            <label>
                 Format preset
                 <select class="format">
 
@@ -60,6 +64,7 @@
         getState: function () {
             return {
                 'assetID': this._assetID,
+                'caption': this.qs(".caption").value,
                 'format': this.qs(".format").value
             };
         },
@@ -69,6 +74,9 @@
             this._format = state.format;
             // May be too early, may not...
             this.qs(".format").value = this._format;
+            if (typeof state.caption != "undefined") {
+                this.qs(".caption").value = state.caption;
+            }
             this._updatePreview();
         },
 
@@ -134,6 +142,7 @@
         _receiveAsset: function (assetID, url, title) {
             this._assetID = assetID;
             this._title = title;
+            this._caption = title;
             this._closeSelector();
             this.qs(".preview").style.display = "block";
             this._updatePreview();
