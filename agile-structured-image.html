@@ -65,15 +65,21 @@
             return {
                 'assetID': this._assetID,
                 'caption': this.qs(".caption").value,
-                'format': this.qs(".format").value
+                // This will be called before the select is ready in which case we need to fetch from the variable
+                format: this.qs(".format").value == "" ? this._format : this.qs(".format").value
             };
         },
 
         setState: function (state) {
             this._assetID = state.assetID;
             this._format = state.format;
-            // May be too early, may not...
-            this.qs(".format").value = this._format;
+            // Need to set both because this is called before the
+            // select is ready (in which case the select building code
+            // will populate it) and after, in which case it needs
+            // to be set here
+            this.qs(".format").value = state.format;
+            this._format = state.format;
+            
             if (typeof state.caption != "undefined") {
                 this.qs(".caption").value = state.caption;
             }
@@ -159,6 +165,11 @@
             this.qs(".toggleselector").addEventListener("click", this._toggleSelector.bind(this));
         },
 
+        /**
+         * This function has an issue which is that if it is 'attached' then it's
+         * called too late for getState() and if it's 'ready' then this._format
+         * hasn't yet been set in setState()
+         */
         attached: function () {
             if (typeof this.formats === "object") {
                 for (var key in this.formats) {
