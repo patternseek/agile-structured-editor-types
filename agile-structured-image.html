@@ -130,9 +130,9 @@
             wrap.src = this.selectorUrl;
             wrap.onload = function () {
                 wrap.contentWindow.insertArticleThumb = this._receiveAsset.bind(this);
+                wrap.style.display = "block";
             }.bind(this);
 
-            wrap.style.display = "block";
 
             if( typeof event != "undefined" ){
                 event.preventDefault();
