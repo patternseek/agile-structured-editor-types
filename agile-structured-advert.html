@@ -1,0 +1,142 @@
+<link rel="import" href="../polymer/polymer-micro.html">
+
+<style>
+    agile-structured-advert iframe {
+        width: 100%;
+        height: 600px;
+        display: none;
+        border: none;
+    }
+
+    agile-structured-advert .preview {
+        display: none;
+    }
+
+</style>
+
+<template id="agile-structured-advert" noshadowroot>
+    <div class="preview inputswrapper">
+        <label>
+            Advert
+            <input readonly class="advertTitle" value="None">
+        </label>
+        <label>
+            Advert pool
+            <input readonly class="advertPool" value="None">
+        </label>
+    </div>
+    <button class="toggleselector">Advert selector</button>
+    <iframe class="selectorwrapper"></iframe>
+    <content></content>
+</template>
+
+
+<script>
+    Polymer({
+        is: 'agile-structured-advert',
+        behaviors: [MinimalComponent],
+
+        properties: {
+            selectorUrl: String,
+            _advertID: Number,
+            _advertTitle: Number,
+            _advertPool: String
+        },
+
+
+        template: currentImport.querySelector('#agile-structured-advert'),
+
+        dataType: "agile-advert",
+
+        getState: function () {
+            return {
+                'specific': this._advertID,
+                'title': this._advertTitle,
+                'pools': this._advertPool
+            };
+        },
+
+        setState: function (state) {
+            this._advertID = state.specific;
+            this._advertTitle = state.title;
+            this._advertPool = state.pool;
+
+            this._updatePreview();
+        },
+
+        _onChange: function () {
+            var event = new Event('pnsk-component-stateChanged');
+            this.dispatchEvent(event);
+            this._updatePreview();
+        },
+
+        _updatePreview: function () {
+            if (( (typeof this._advertID == "undefined") || (this._advertID == null) )
+                    && ( (typeof this._advertPool == "undefined") || (this._advertPool == null) )
+            ) {
+                this.qs(".preview").style.display = "none";
+                return;
+            }
+            this.qs(".advertTitle").value = this._advertTitle ? this._advertTitle : 'None';
+            this.qs(".advertPool").value = this._advertPool ? this._advertPool : 'None';
+            this.qs(".preview").style.display = "block";
+        },
+
+        _toggleSelector: function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (this.qs(".selectorwrapper").style.display == "block") {
+                this._closeSelector();
+            } else {
+                this._openSelector();
+            }
+        },
+
+        _openSelector: function (event) {
+            var wrap = this.qs(".selectorwrapper");
+            wrap.src = this.selectorUrl;
+            wrap.onload = function () {
+                wrap.contentWindow.insertAdvert = this._receiveAdvert.bind(this);
+                wrap.contentWindow.insertPool = this._receivePool.bind(this);
+                wrap.style.display = "block";
+            }.bind(this);
+
+
+            if (typeof event != "undefined") {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+        },
+
+        _closeSelector: function () {
+            this.qs(".selectorwrapper").style.display = "none";
+        },
+
+        _receiveAdvert: function (advertID, advertTitle) {
+            this._advertID = advertID;
+            this._advertTitle = advertTitle;
+            this._advertPool = null;
+            this._closeSelector();
+            this._updatePreview();
+            this._onChange();
+        },
+
+        _receivePool: function (pool) {
+            this._advertPool = pool;
+            this._advertID = null;
+            this._advertTitle = null;
+            this._closeSelector();
+            this._updatePreview();
+            this._onChange();
+        },
+
+        // Element Lifecycle
+        created: function () {
+            this.qs(".toggleselector").addEventListener("click", this._toggleSelector.bind(this));
+        },
+
+
+    });
+
+</script>
