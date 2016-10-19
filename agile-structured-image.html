@@ -35,6 +35,10 @@
 
                 </select>
             </label>
+            <label>
+                Link URL (Optional)
+                <input class="linkUrl">
+            </label>
         </span>
 
     <content></content>
@@ -50,6 +54,7 @@
             selectorUrl: String,
             assetDisplayUrl: String,
             formats: Object,
+            _linkUrl: String,
             _assetID: Number,
             _title: String,
             _format: Object,
@@ -65,6 +70,7 @@
             return {
                 'assetID': this._assetID,
                 'caption': this.qs(".caption").value,
+                'linkUrl': this.qs(".linkUrl").value,
                 // This will be called before the select is ready in which case we need to fetch from the variable
                 format: this.qs(".format").value == "" ? this._format : this.qs(".format").value
             };
@@ -82,6 +88,9 @@
             
             if (typeof state.caption != "undefined") {
                 this.qs(".caption").value = state.caption;
+            }
+            if (typeof state.linkUrl != "undefined") {
+                this.qs(".linkUrl").value = state.linkUrl;
             }
             this._updatePreview();
         },
