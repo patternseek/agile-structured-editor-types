@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "polymer": "~1.2.3",
-    "pnsk-structured-editor": "~0.2.0",
+    "pnsk-structured-editor": "~0",
     "agile-zencoder-create-and-select": "~0.2.3"
   }
 }
